@@ -59,6 +59,27 @@ function GenerateQuadsBricks(atlas)
 end
 
 --[[
+    function for generating the powerups
+        
+]]
+
+function GenerateQuadsPowerups(atlas)
+    local x = 0
+    local y = 16*12
+
+    local counter = 1
+    local quads = {}
+
+    for i = 0, 10 do
+        quads[counter] = love.graphics.newQuad(x, y, 16, 16, atlas:getDimensions())
+        x = x + 16
+        counter = counter + 1
+    end
+
+    return quads
+end
+
+--[[
     This function is specifically made to piece out the paddles from the
     sprite sheet. For this, we have to piece out the paddles a little more
     manually, since they are all different sizes.

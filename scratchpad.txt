@@ -1,0 +1,10 @@
+//this is how to draw the 10th powerup in my list of powerups
+
+love.graphics.draw(gTextures['main'], gFrames['powerups'][10],
+VIRTUAL_WIDTH / 2 - 32, VIRTUAL_HEIGHT - VIRTUAL_HEIGHT / 3 + 40)
+
+
+- functions for adding powerups 
+    --init new powerups 
+    self.powerup = Powerup()
+    self.powerup:render()

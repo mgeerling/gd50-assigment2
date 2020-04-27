@@ -20,3 +20,6 @@ VIRTUAL_HEIGHT = 243
 
 -- paddle movement speed
 PADDLE_SPEED = 200
+
+--required paddle score to size up
+PADDLE_SCORE_REQ = 2000

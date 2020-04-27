@@ -117,6 +117,8 @@ function Brick:hit()
         -- if we're in the first tier and the base color, remove brick from play
         if self.color == 1 then
             self.inPlay = false
+            -- optionally spawn a powerup here 
+            
         else
             self.color = self.color - 1
         end

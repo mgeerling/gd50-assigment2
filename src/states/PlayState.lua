@@ -34,6 +34,13 @@ function PlayState:enter(params)
     -- give ball random starting velocity
     self.ball.dx = math.random(-200, 200)
     self.ball.dy = math.random(-50, -60)
+
+    self.paddleSizeScore = 0
+
+    --add powerups 
+    self.powerup = Powerup()
+
+
 end
 
 function PlayState:update(dt)
@@ -53,6 +60,7 @@ function PlayState:update(dt)
     -- update positions based on velocity
     self.paddle:update(dt)
     self.ball:update(dt)
+    self.powerup:update(dt)
 
     if self.ball:collides(self.paddle) then
         -- raise ball above paddle in case it goes below it, then reverse dy
@@ -83,9 +91,18 @@ function PlayState:update(dt)
 
             -- add to score
             self.score = self.score + (brick.tier * 200 + brick.color * 25)
-
+            self.paddleSizeScore = self.paddleSizeScore + (brick.tier * 200 + brick.color * 25)
+            if self.paddleSizeScore > PADDLE_SCORE_REQ and self.paddle.size < 4 then 
+                self.paddle.size = self.paddle.size + 1 
+                self.paddleSizeScore = 0 
+            end
             -- trigger the brick's hit function, which removes it from play
             brick:hit()
+            --TODO re-enable later
+            --self.powerup.inPlay = true
+            self.powerup.dy = 5
+            self.powerup.x = self.ball.x
+            self.powerup.y = self.ball.y
 
             -- if we have enough points, recover a point of health
             if self.score > self.recoverPoints then
@@ -167,6 +184,10 @@ function PlayState:update(dt)
     -- if ball goes below bounds, revert to serve state and decrease health
     if self.ball.y >= VIRTUAL_HEIGHT then
         self.health = self.health - 1
+        if self.paddle.size > 1 then 
+            self.paddle.size = self.paddle.size - 1
+        end
+        self.paddleSizeScore = 0 
         gSounds['hurt']:play()
 
         if self.health == 0 then
@@ -210,6 +231,7 @@ function PlayState:render()
 
     self.paddle:render()
     self.ball:render()
+    self.powerup:render()
 
     renderScore(self.score)
     renderHealth(self.health)
