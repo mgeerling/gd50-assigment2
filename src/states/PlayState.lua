@@ -135,6 +135,7 @@ function PlayState:update(dt)
                     self.paddleSizeScore = self.paddleSizeScore + (brick.tier * 200 + brick.color * 25)
                     if self.paddleSizeScore > PADDLE_SCORE_REQ and self.paddle.size < 4 then 
                         self.paddle.size = self.paddle.size + 1 
+                        self.paddle.width = self.paddle.size*32
                         self.paddleSizeScore = 0 
                     end
                     -- trigger the brick's hit function, which removes it from play
@@ -270,6 +271,7 @@ function PlayState:update(dt)
         self.health = self.health - 1
         if self.paddle.size > 1 then 
             self.paddle.size = self.paddle.size - 1
+            self.paddle.width = self.paddle.size*32
         end
         self.paddleSizeScore = 0 
         gSounds['hurt']:play()
