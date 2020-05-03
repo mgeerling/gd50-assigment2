@@ -76,14 +76,13 @@ function PlayState:update(dt)
 
     -- update positions based on velocity
     self.paddle:update(dt)
+    self.ball:update(dt)
+    self.powerup:update(dt)
     if self.powerup.isActive then 
         self.balls[2]:update(dt)
         self.balls[3]:update(dt)
     end 
-    self.ball:update(dt)
-    self.powerup:update(dt)
     
-
     for j, ball in pairs(self.balls) do 
         if ball:collides(self.paddle) then
             -- raise ball above paddle in case it goes below it, then reverse dy
@@ -112,8 +111,8 @@ function PlayState:update(dt)
         self.powerup.inPlay = false 
         self.powerup.isActive = true
         --TODO spawn a new ball and keep track 
-        for i=1,3,1 do
-            table.insert(self.balls,i,Ball(math.random(7)))
+        for i=2,3,1 do
+            table.insert(self.balls,Ball(math.random(7)))
             self.balls[i].x = self.paddle.x + (self.paddle.width / 2) - 4
             self.balls[i].y = self.paddle.y - 8
             -- give ball random starting velocity
