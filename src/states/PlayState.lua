@@ -28,6 +28,7 @@ function PlayState:enter(params)
     self.highScores = params.highScores
     self.ball = params.ball
     self.level = params.level
+    self.locked = params.locked
 
     self.recoverPoints = 5000
 
@@ -38,14 +39,18 @@ function PlayState:enter(params)
     self.paddleSizeScore = 0
 
     --add powerups 
-    self.powerup = Powerup()
+    --self.powerups{}
+    self.powerup = Powerup(1)
+    -- if self.locked == true then 
+    --     table.insert(self.powerups,Powerup(10))
+    -- end
 
     --create a timer for spawning powerups; TODO tweak boundaries later  
     self.powerupTimer = math.random(0,3)
 
     --create an array for all balls
     self.balls = {}
-    table.insert(self.balls,1,self.ball)
+    table.insert(self.balls,self.ball)
 
     --check if we still have balls alive
     self.stillBalls = true
@@ -71,12 +76,14 @@ function PlayState:update(dt)
 
     -- update positions based on velocity
     self.paddle:update(dt)
-    self.ball:update(dt)
-    self.powerup:update(dt)
     if self.powerup.isActive then 
         self.balls[2]:update(dt)
         self.balls[3]:update(dt)
     end 
+    self.ball:update(dt)
+    self.powerup:update(dt)
+    
+
     for j, ball in pairs(self.balls) do 
         if ball:collides(self.paddle) then
             -- raise ball above paddle in case it goes below it, then reverse dy
@@ -311,7 +318,8 @@ function PlayState:render()
     if self.powerup.isActive then 
         self.balls[2]:render()
         self.balls[3]:render()
-    end 
+    end
+ 
 
     renderScore(self.score)
     renderHealth(self.health)

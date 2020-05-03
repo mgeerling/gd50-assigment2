@@ -14,7 +14,7 @@ Powerup = Class{}
 --[[
  TODO
 ]]
-function Powerup:init()
+function Powerup:init(skin)
     --not in play by default
     self.inPlay = false 
     -- x is placed in the middle
@@ -30,6 +30,7 @@ function Powerup:init()
     self.width = 16
     self.height = 16
     self.isActive = false
+    self.skin = skin
 
 end
 
@@ -66,7 +67,7 @@ end
 ]]
 function Powerup:render()
     if self.inPlay then 
-        love.graphics.draw(gTextures['main'], gFrames['powerups'][1],
+        love.graphics.draw(gTextures['main'], gFrames['powerups'][self.skin],
             self.x, self.y)
     end 
 end

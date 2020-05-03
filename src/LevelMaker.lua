@@ -119,6 +119,13 @@ function LevelMaker.createMap(level)
         end
     end 
 
+    --TODO need to use variable length based on brick count
+    local chosenOne = bricks[#bricks]
+    --TODO set style of locked brick
+    chosenOne.color = 6
+    chosenOne.tier = 1
+    chosenOne.locked = true
+
     -- in the event we didn't generate any bricks, try again
     if #bricks == 0 then
         return self.createMap(level)
