@@ -74,7 +74,8 @@ function PlayState:update(dt)
     self.ball:update(dt)
     self.powerup:update(dt)
     if self.powerup.isActive then 
-        self.extraBall:update(dt)
+        self.balls[2]:update(dt)
+        self.balls[3]:update(dt)
     end 
     for j, ball in pairs(self.balls) do 
         if ball:collides(self.paddle) then
@@ -103,16 +104,16 @@ function PlayState:update(dt)
         --TODO make a powerup noise 
         self.powerup.inPlay = false 
         self.powerup.isActive = true
-        --TODO change powerup spawn logic so that we don't get a bunch of powerups
         --TODO spawn a new ball and keep track 
-        self.extraBall = Ball()
-        self.extraBall.skin = math.random(7)
-        self.extraBall.x = self.paddle.x + (self.paddle.width / 2) - 4
-        self.extraBall.y = self.paddle.y - 8
-        -- give ball random starting velocity
-        self.extraBall.dx = math.random(-200, 200)
-        self.extraBall.dy = math.random(-50, -60)
-        table.insert(self.balls,1,self.extraBall)
+        for i=1,3,1 do
+            table.insert(self.balls,i,Ball(math.random(7)))
+            self.balls[i].x = self.paddle.x + (self.paddle.width / 2) - 4
+            self.balls[i].y = self.paddle.y - 8
+            -- give ball random starting velocity
+            self.balls[i].dx = math.random(-200, 200)
+            self.balls[i].dy = math.random(-50, -60)
+        end
+        
     end 
 
     -- detect collision across all bricks with the ball
@@ -256,7 +257,7 @@ function PlayState:update(dt)
         end
     end
 
-    if self.powerup.isActive and self.ball.y >= VIRTUAL_HEIGHT and self.extraBall.y >= VIRTUAL_HEIGHT then
+    if self.powerup.isActive and self.ball.y >= VIRTUAL_HEIGHT and self.balls[2].y >= VIRTUAL_HEIGHT and self.balls[3].y >= VIRTUAL_HEIGHT then
         self.powerup.isActive = false 
         self.health = self.health - 1
         if self.paddle.size > 1 then 
@@ -308,7 +309,8 @@ function PlayState:render()
     self.ball:render()
     self.powerup:render()
     if self.powerup.isActive then 
-        self.extraBall:render()
+        self.balls[2]:render()
+        self.balls[3]:render()
     end 
 
     renderScore(self.score)
