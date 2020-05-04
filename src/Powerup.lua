@@ -11,9 +11,6 @@
 
 Powerup = Class{}
 
---[[
- TODO
-]]
 function Powerup:init(skin)
     --not in play by default
     self.inPlay = false 
@@ -35,7 +32,6 @@ function Powerup:init(skin)
 end
 
 function Powerup:update(dt)
-    --make it fall like particles TODO
     self.y = self.y + self.dy * dt
 end
 

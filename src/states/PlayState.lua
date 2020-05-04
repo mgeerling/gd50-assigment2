@@ -45,7 +45,6 @@ function PlayState:enter(params)
     --     table.insert(self.powerups,Powerup(10))
     -- end
 
-    --create a timer for spawning powerups; TODO tweak boundaries later  
     self.powerupTimer = math.random(0,3)
 
     --create an array for all balls
@@ -78,10 +77,14 @@ function PlayState:update(dt)
     self.paddle:update(dt)
     self.ball:update(dt)
     self.powerup:update(dt)
+    --STYLE - could check for nil - probably better
     if self.powerup.isActive then 
         self.balls[2]:update(dt)
         self.balls[3]:update(dt)
     end 
+    if self.key ~= nil then 
+        self.key:update(dt)
+    end
     
     for j, ball in pairs(self.balls) do 
         if ball:collides(self.paddle) then
@@ -107,10 +110,10 @@ function PlayState:update(dt)
     end
 
     if self.powerup.inPlay and self.powerup:collides(self.paddle) then 
-        --TODO make a powerup noise 
+        gSounds['confirm']:play()
         self.powerup.inPlay = false 
         self.powerup.isActive = true
-        --TODO spawn a new ball and keep track 
+        --spawn a new ball and keep track 
         for i=2,3,1 do
             table.insert(self.balls,Ball(math.random(7)))
             self.balls[i].x = self.paddle.x + (self.paddle.width / 2) - 4
@@ -119,8 +122,17 @@ function PlayState:update(dt)
             self.balls[i].dx = math.random(-200, 200)
             self.balls[i].dy = math.random(-50, -60)
         end
-        
     end 
+
+    if self.key ~= nil then 
+        if self.key:collides(self.paddle) then 
+            self.lockedBrick.locked = false 
+            self.lockedBrick.color = 1
+            self.lockedBrick.tier = 0
+            self.score = self.score + 2000
+            self.key.inPlay = false
+        end
+    end
 
     -- detect collision across all bricks with the ball
     for k, brick in pairs(self.bricks) do
@@ -141,7 +153,7 @@ function PlayState:update(dt)
                     -- trigger the brick's hit function, which removes it from play
                     brick:hit()
                     --increment our powerup timer if there is not one in play
-                    --TODO: would be nice to encapsulate 
+                    --STYLE: would be nice to encapsulate 
                     if self.powerup.inPlay == false and self.powerup.isActive == false then 
                         self.powerupTimer = self.powerupTimer + 1
                         if self.powerupTimer > 4 then 
@@ -177,6 +189,16 @@ function PlayState:update(dt)
                             ball = self.ball,
                             recoverPoints = self.recoverPoints
                         })
+                    end
+                
+                else
+                    if self.key == nil then 
+                        self.key = Powerup(10)
+                        self.key.inPlay = true 
+                        self.key.dy = 20 
+                        self.key.x = ball.x
+                        self.key.y = ball.y
+                        self.lockedBrick = brick
                     end
                 end
 
@@ -322,8 +344,11 @@ function PlayState:render()
         self.balls[2]:render()
         self.balls[3]:render()
     end
- 
 
+    if self.key ~= nil then 
+        self.key:render()
+    end
+ 
     renderScore(self.score)
     renderHealth(self.health)
 
